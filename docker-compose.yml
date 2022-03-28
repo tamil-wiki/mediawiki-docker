@@ -1,0 +1,60 @@
+version: '2.4'
+
+x-default: &default
+  dns:
+    - 1.1.1.1
+    - 1.0.0.1
+
+x-mysqlenv:
+  - &mysqlUser admin
+  - &mysqlPass secret
+  - &mysqlDbName my_wiki
+
+services:
+
+  mediawiki:
+    <<: *default
+    build:
+      context: .
+      args:
+        MEDIAWIKI_VERSION: 1.37.1
+    image: tamilwiki/mediawiki:1.37.1
+    ports:
+      - 80
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - wiki_images:/var/www/html/images
+      - wiki_sites:/var/www/html/sites
+      # After initial setup, download LocalSettings.php to the same directory as
+      # this yaml and uncomment the following line and use compose to restart
+      # the mediawiki service
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+    restart: on-failure
+
+  database:
+    <<: *default
+    image: mariadb:latest
+    ports:
+      - 3306
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
+      MYSQL_DATABASE: *mysqlDbName
+      MYSQL_USER: *mysqlUser
+      MYSQL_PASSWORD: *mysqlPass
+      MYSQL_ROOT_PASSWORD: *mysqlPass
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin --user $$MYSQL_USER --password=$$MYSQL_PASSWORD --port 3306 --protocol TCP ping 2>&1 | grep "mysqld is alive" || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    restart: on-failure
+
+volumes:
+  wiki_images:
+  wiki_sites:
+  db_data:
