@@ -18,6 +18,7 @@ services:
       context: .
       args:
         MEDIAWIKI_VERSION: 1.37.1
+        MEDIAWIKI_BRANCH: REL1_37
     image: tamilwiki/mediawiki:1.37.1
     ports:
       - 80
