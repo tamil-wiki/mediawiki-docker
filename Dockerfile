@@ -9,15 +9,20 @@ RUN set -eux; \
   { \
     echo "RemoteIPHeader X-Forwarded-For"; \
     echo "RemoteIPTrustedProxy 127.0.0.0/8"; \
+    echo "RemoteIPTrustedProxy 10.0.0.0/8"; \
+    echo "RemoteIPTrustedProxy 172.16.0.0/12"; \
     echo "RemoteIPTrustedProxy 192.168.0.0/16"; \
     echo "RemoteIPTrustedProxy 169.254.0.0/16"; \
-    echo "RemoteIPTrustedProxy 172.17.0.0/16"; \
-    echo "RemoteIPTrustedProxy 172.18.0.0/16"; \
-    echo "RemoteIPTrustedProxy 172.19.0.0/16"; \
   } > "$APACHE_CONFDIR/conf-available/remoteip.conf"; \
-  a2enconf remoteip
+  a2enconf remoteip; \
+# https://github.com/docker-library/wordpress/issues/383#issuecomment-507886512
+# (replace all instances of "%h" with "%a" in LogFormat)
+	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
-VOLUME [ "/var/www/html/images", "/var/www/html/sites" ]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+VOLUME [ "/var/www/html/images" ]
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards ConfirmAccount AccessControl Cargo CategoryLockdown GoogleLogin'}
@@ -36,5 +41,6 @@ RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
     done
 
+ENTRYPOINT [ "/entrypoint.sh" ]
 
-# TODO: entrypoint
+CMD ["apache2-foreground"]
