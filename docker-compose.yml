@@ -21,7 +21,7 @@ services:
         MEDIAWIKI_BRANCH: REL1_37
     image: tamilwiki/mediawiki:1.37.1
     ports:
-      - 80
+      - 32080:80
     depends_on:
       database:
         condition: service_healthy
@@ -32,6 +32,12 @@ services:
       # this yaml and uncomment the following line and use compose to restart
       # the mediawiki service
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost/jsduck.json || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
     restart: on-failure
 
   database:
