@@ -22,7 +22,7 @@ RUN set -eux; \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-VOLUME [ "/var/www/html/images" ]
+VOLUME [ "/var/www/html/images", "/var/www/html/cache" ]
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards ConfirmAccount AccessControl Cargo CategoryLockdown GoogleLogin'}

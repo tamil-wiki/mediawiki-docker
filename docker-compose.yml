@@ -25,6 +25,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      - MEDIAWIKI_UPDATE="true"
     volumes:
       - wiki_images:/var/www/html/images
       - wiki_sites:/var/www/html/sites
