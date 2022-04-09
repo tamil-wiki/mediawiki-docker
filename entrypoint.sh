@@ -19,7 +19,7 @@ if [[ "$1" == apache2* ]]; then
   fi
 
   chown -R $user:$group $WIKI_DIR/cache
-  # chown -R $user:$group $WIKI_DIR/images
+  chown -R $user:$group $WIKI_DIR/images
   chmod 755 $WIKI_DIR/images
 
   # If LocalSettings.php exists, then attempt to run the update.php maintenance
