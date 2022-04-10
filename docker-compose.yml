@@ -21,19 +21,29 @@ services:
         MEDIAWIKI_BRANCH: REL1_37
     image: tamilwiki/mediawiki:1.37.1
     ports:
-      - 32080:80
+      - 80:80
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - MEDIAWIKI_UPDATE="true"
+      MEDIAWIKI_DB_HOST: database
+      MEDIAWIKI_DB_NAME: *mysqlDbName
+      MEDIAWIKI_DB_PASSWORD: *mysqlPass
+      MEDIAWIKI_DB_TYPE: mysql
+      MEDIAWIKI_DB_USER: *mysqlUser
+      MEDIAWIKI_EMERGENCY_CONTACT: admin@mywiki.com
+      MEDIAWIKI_SECRET_KEY: 8h84jxrp86t719ip02kxxu9a5d8gpnod8by5p9l9pglkmrkcim2jayrqkbwvn2gl
+      MEDIAWIKI_SERVER_URL: http://localhost
+      MEDIAWIKI_UPDATE: "true"
+      MEDIAWIKI_UPGRADE_KEY: wi8skgexo1hmje4z
     volumes:
-      - wiki_images:/var/www/html/images
-      - wiki_sites:/var/www/html/sites
+      - ./images:/var/www/html/images
       # After initial setup, download LocalSettings.php to the same directory as
       # this yaml and uncomment the following line and use compose to restart
       # the mediawiki service
-      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      # TODO: MW install if the install is not done. when we start from scratch.
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./CustomSettings.php:/var/www/html/CustomSettings.php
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail http://localhost/jsduck.json || exit 1"]
       interval: 30s
@@ -64,6 +74,4 @@ services:
     restart: on-failure
 
 volumes:
-  wiki_images:
-  wiki_sites:
   db_data:
