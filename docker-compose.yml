@@ -32,9 +32,11 @@ services:
       MEDIAWIKI_DB_TYPE: mysql
       MEDIAWIKI_DB_USER: *mysqlUser
       MEDIAWIKI_EMERGENCY_CONTACT: admin@mywiki.com
+      # 64 char random string a-z, 0-9
       MEDIAWIKI_SECRET_KEY: 8h84jxrp86t719ip02kxxu9a5d8gpnod8by5p9l9pglkmrkcim2jayrqkbwvn2gl
       MEDIAWIKI_SERVER_URL: http://localhost
       MEDIAWIKI_UPDATE: "true"
+      # 16 char random string a-z, 0-9
       MEDIAWIKI_UPGRADE_KEY: wi8skgexo1hmje4z
     volumes:
       - ./images:/var/www/html/images
