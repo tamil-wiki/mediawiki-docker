@@ -39,11 +39,11 @@ if [[ "$1" == apache2* ]]; then
 
   # If the container start first time, then install the mediawiki
   if [ $isMediawikiInstalled = false ]; then
-    #mv $SETTINGS_PATH /tmp/LocalSettings.php.bak
+    mv $SETTINGS_PATH /tmp/LocalSettings.php.bak
     echo >&2 'info: Running maintenance/install.php';
-    mkdir $WIKI_DIR/tmp/
+    mkdir -p $WIKI_DIR/tmp/
     php maintenance/install.php \
-      --confpath $WIKI_DIR/tmp/ \
+      --confpath $WIKI_DIR \
       --dbname "$MEDIAWIKI_DB_NAME" \
       --dbport "$MEDIAWIKI_DB_PORT" \
       --dbserver "$MEDIAWIKI_DB_HOST" \
@@ -56,11 +56,10 @@ if [[ "$1" == apache2* ]]; then
       --scriptpath "" \
       --lang "$MEDIAWIKI_SITE_LANG" \
       --pass "$MEDIAWIKI_ADMIN_PASS" \
-      --with-extensions \
       "$MEDIAWIKI_SITE_NAME" \
       "$MEDIAWIKI_ADMIN_USER"
 
-    #mv /tmp/LocalSettings.php.bak $SETTINGS_PATH
+    mv /tmp/LocalSettings.php.bak $SETTINGS_PATH
     # Run update.php as extensions need to create tables
     # This condition is to avoid running update.php multiple times.
     if [[ -z $MEDIAWIKI_UPDATE || $MEDIAWIKI_UPDATE != true ]]; then

@@ -43,11 +43,8 @@ services:
       MEDIAWIKI_UPGRADE_KEY: wi8skgexo1hmje4z
     volumes:
       - ./images:/var/www/html/images
-      # After initial setup, download LocalSettings.php to the same directory as
-      # this yaml and uncomment the following line and use compose to restart
-      # the mediawiki service
-      # TODO: MW install if the install is not done. when we start from scratch.
-      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      # Don't mount LocalSettings.php and its auto generated based on env's
+      # Add your configurations in CustomSettings.php
       - ./CustomSettings.php:/var/www/html/CustomSettings.php
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail http://localhost/jsduck.json || exit 1"]
