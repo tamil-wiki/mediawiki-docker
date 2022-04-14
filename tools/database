@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Login to database container as $MYSQL_USER
+
+docker-compose exec database bash -c "mysql --host localhost --protocol tcp --port 3306 --user \$MYSQL_USER --password=\$MYSQL_PASSWORD \$MYSQL_DATABASE"

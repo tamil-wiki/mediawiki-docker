@@ -21,6 +21,7 @@ services:
         MEDIAWIKI_BRANCH: REL1_37
     image: tamilwiki/mediawiki:1.37.1
     ports:
+      # The VisualEditor to work the host port and container port has to be same
       - 80:80
     depends_on:
       database:
@@ -31,6 +32,8 @@ services:
       MEDIAWIKI_DB_PASSWORD: *mysqlPass
       MEDIAWIKI_DB_TYPE: mysql
       MEDIAWIKI_DB_USER: *mysqlUser
+      # Only used while bring up from scratch
+      MEDIAWIKI_ADMIN_PASS: topsecretpassword
       MEDIAWIKI_EMERGENCY_CONTACT: admin@mywiki.com
       # 64 char random string a-z, 0-9
       MEDIAWIKI_SECRET_KEY: 8h84jxrp86t719ip02kxxu9a5d8gpnod8by5p9l9pglkmrkcim2jayrqkbwvn2gl

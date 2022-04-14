@@ -19,11 +19,6 @@ RUN set -eux; \
 # (replace all instances of "%h" with "%a" in LogFormat)
 	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
-COPY entrypoint.sh /entrypoint.sh
-COPY LocalSettings.php /var/www/html/LocalSettings.php
-COPY CustomSettings.php /var/www/html/CustomSettings.php
-RUN chmod +x /entrypoint.sh
-
 VOLUME [ "/var/www/html/images", "/var/www/html/cache" ]
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
@@ -42,6 +37,12 @@ RUN for extension in $MEDIAWIKI_EXTENSIONS; do \
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
     done
+
+COPY entrypoint.sh /entrypoint.sh
+COPY check.php /check.php
+COPY LocalSettings.php /var/www/html/LocalSettings.php
+COPY CustomSettings.php /var/www/html/CustomSettings.php
+RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
