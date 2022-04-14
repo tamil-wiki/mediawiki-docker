@@ -1,0 +1,74 @@
+version: '2.4'
+
+x-default: &default
+  dns:
+    - 1.1.1.1
+    - 1.0.0.1
+
+x-mysqlenv:
+  - &mysqlUser admin
+  - &mysqlPass secret
+  - &mysqlDbName my_wiki
+
+services:
+
+  mediawiki:
+    <<: *default
+    image: tamilwiki/mediawiki:1.37.1
+    ports:
+      # The VisualEditor to work the host port and container port has to be same
+      - 80:80
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      MEDIAWIKI_DB_HOST: database
+      MEDIAWIKI_DB_NAME: *mysqlDbName
+      MEDIAWIKI_DB_PASSWORD: *mysqlPass
+      MEDIAWIKI_DB_TYPE: mysql
+      MEDIAWIKI_DB_USER: *mysqlUser
+      # Only used while bring up from scratch
+      MEDIAWIKI_ADMIN_PASS: topsecretpassword
+      MEDIAWIKI_EMERGENCY_CONTACT: admin@mywiki.com
+      # 64 char random string a-z, 0-9
+      MEDIAWIKI_SECRET_KEY: 8h84jxrp86t719ip02kxxu9a5d8gpnod8by5p9l9pglkmrkcim2jayrqkbwvn2gl
+      MEDIAWIKI_SERVER_URL: http://localhost
+      MEDIAWIKI_UPDATE: "true"
+      # 16 char random string a-z, 0-9
+      MEDIAWIKI_UPGRADE_KEY: wi8skgexo1hmje4z
+    volumes:
+      - ./images:/var/www/html/images
+      # Don't mount LocalSettings.php and its auto generated based on env's
+      # Add your configurations in CustomSettings.php
+      - ./CustomSettings.php:/var/www/html/CustomSettings.php
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost/jsduck.json || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    restart: on-failure
+
+  database:
+    <<: *default
+    image: mariadb:latest
+    ports:
+      - 3306
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
+      MYSQL_DATABASE: *mysqlDbName
+      MYSQL_USER: *mysqlUser
+      MYSQL_PASSWORD: *mysqlPass
+      MYSQL_ROOT_PASSWORD: *mysqlPass
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin --user $$MYSQL_USER --password=$$MYSQL_PASSWORD --port 3306 --protocol TCP ping 2>&1 | grep "mysqld is alive" || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    restart: on-failure
+
+volumes:
+  db_data:

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Script to get the IP address of the given service or all service
+
+# Get all container_ids
+if [[ $# -eq 0 ]]; then
+	container_ids=($(docker-compose ps -q))
+else
+  given_container_id=$(docker-compose ps -q $1)
+	container_ids=(" $given_container_id ")
+fi
+
+for container_id in "${container_ids[@]}"
+do
+  if [[ ! -z $container_id ]]; then
+    ip_address=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $container_id)
+    name=$(docker inspect -f '{{index .Config.Labels "com.docker.compose.service"}}' $container_id)
+  fi
+  printf '%-15s %-15s\n' "${name}" "${ip_address}"
+done

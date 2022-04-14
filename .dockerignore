@@ -1,0 +1,5 @@
+*.log
+*.tar.gz
+*.sql
+images
+cache

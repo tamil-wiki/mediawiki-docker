@@ -1,1 +1,68 @@
-# Mediawiki Docker
+:toc: left
+
+= Mediawiki Docker
+
+== Prerequestics
+
+* Docker 19.03.13 or latest
+* Docker compose 1.29.2 or latest
+
+Install docker
+
+```
+curl -ksSL https://get.docker.com/ | sh
+curl -ksSL https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker | sudo tee /etc/bash_completion.d/docker
+sudo usermod -aG docker ${USER}
+```
+
+Install docker-compose
+
+```
+sudo curl -ksSL https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+curl -ksSL https://raw.githubusercontent.com/docker/compose/$(docker-compose --version | awk 'NR==1{print $NF}')/contrib/completion/bash/docker-compose | sudo tee /etc/bash_completion.d/docker-compose
+```
+
+== Bringup from scratch
+
+```
+docker-compose up -d
+```
+
+Then
+
+http://localhost
+
+Login with username "admin" and password in
+
+== Migrate existing wiki to docker
+
+* Backup your wiki database and images folder.
+* Copy your "images" folder where the `docker-compose.yml` file reside
+* Bringup database only
+```
+docker-compose up -d database
+```
+* Then copy your sql file inside the container and mysql import
+```
+docker cp dump.sql $(docker-compose ps -q database):/dump.sql
+docker-compose exec database bash -c "mysql --host localhost --protocol tcp --port 3306 --user \$MYSQL_USER --password=\$MYSQL_PASSWORD \$MYSQL_DATABASE < /dump.sql"
+```
+* Then bring-up media wiki
+```
+docker-compose up -d mediawiki
+```
+
+http://localhost
+
+Login with your old admin username and password
+
+== Development
+
+=== Build a new image
+
+```
+docker-compose -f docker-compose.yml -f development.override.yml build mediawiki
+```
+
+=== Test new image in local

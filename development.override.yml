@@ -1,0 +1,10 @@
+version: '2.4'
+
+services:
+
+  mediawiki:
+    build:
+      context: .
+      args:
+        MEDIAWIKI_VERSION: 1.37.1
+        MEDIAWIKI_BRANCH: REL1_37
