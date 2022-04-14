@@ -14,11 +14,6 @@ services:
 
   mediawiki:
     <<: *default
-    build:
-      context: .
-      args:
-        MEDIAWIKI_VERSION: 1.37.1
-        MEDIAWIKI_BRANCH: REL1_37
     image: tamilwiki/mediawiki:1.37.1
     ports:
       # The VisualEditor to work the host port and container port has to be same
