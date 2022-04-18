@@ -27,6 +27,7 @@ RUN chmod +x /usr/local/bin/composer
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards ConfirmAccount AccessControl Cargo CategoryLockdown GoogleLogin'}
+# List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
 ARG GERRIT_REPO="https://gerrit.wikimedia.org/r/mediawiki"
@@ -48,7 +49,8 @@ RUN for extension in $COMPOSER_INSTALL_EXTENSIONS; do \
   composer --working-dir=$EXTENSION_DIR/$extension install --no-dev; \
   done
 
-RUN chown -R www-data:www-data $EXTENSION_DIR/$extension
+RUN chown -R www-data:www-data $EXTENSION_DIR
+RUN chown -R www-data:www-data $SKIN_DIR
 
 COPY entrypoint.sh /entrypoint.sh
 COPY check.php /check.php
