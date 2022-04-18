@@ -33,7 +33,7 @@ Then
 
 http://localhost
 
-Login with username "admin" and password in
+Login with username "admin" and password in your env "MEDIAWIKI_ADMIN_PASS". Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/docker-compose.yml#L31[docker-compose.yml]
 
 == Migrate existing wiki to docker
 
@@ -60,6 +60,8 @@ Login with your old admin username and password
 == Development
 
 === Build a new image
+
+Change the `Dockerfile` for your need and build docker image
 
 ```
 docker-compose -f docker-compose.yml -f development.override.yml build mediawiki
