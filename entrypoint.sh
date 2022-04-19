@@ -8,7 +8,7 @@
 : ${MEDIAWIKI_UPDATE:=false}
 : ${MEDIAWIKI_SERVER_URL:=http://localhost}
 
-if [[ "$1" == apache2* ]]; then
+if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
   WIKI_DIR="/var/www/html"
   SETTINGS_PATH="$WIKI_DIR/LocalSettings.php"
   uid="$(id -u)"
