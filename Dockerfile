@@ -26,7 +26,7 @@ RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards ConfirmAccount AccessControl Cargo CategoryLockdown GoogleLogin'}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards AccessControl Cargo CategoryLockdown'}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
@@ -38,6 +38,17 @@ ARG SKIN_DIR="/var/www/html/extensions"
 RUN for extension in $MEDIAWIKI_EXTENSIONS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/extensions/$extension $EXTENSION_DIR/$extension; \
     done
+
+RUN set -x; \
+	cd $EXTENSION_DIR \
+	# GoogleLogin
+	&& git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
+	&& cd $EXTENSION_DIR/GoogleLogin \
+	&& git checkout -q e424b28c32fbe6ef020b1a83e966bdf8ba71ca83 \
+	# GoogleLogin
+	&& git clone $GERRIT_REPO/extensions/ConfirmAccount $EXTENSION_DIR/ConfirmAccount \
+	&& cd $EXTENSION_DIR/ConfirmAccount \
+	&& git checkout -q 2973d2c5aa14069130998ac72f480166101395ca
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
