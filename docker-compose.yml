@@ -14,7 +14,7 @@ services:
 
   mediawiki:
     <<: *default
-    image: tamilwiki/mediawiki:1.37.1
+    image: tamilwiki/mediawiki:1.37.1-fpm
     ports:
       # The VisualEditor to work the host port and container port has to be same
       - 80:80
