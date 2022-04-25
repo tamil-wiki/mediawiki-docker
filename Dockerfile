@@ -12,7 +12,7 @@ RUN chmod +x /usr/local/bin/composer
 RUN pecl install redis && docker-php-ext-enable redis
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards AccessControl Cargo CategoryLockdown'}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards AccessControl Cargo'}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
@@ -34,8 +34,11 @@ RUN set -x; \
 	# ConfirmAccount
 	&& git clone $GERRIT_REPO/extensions/ConfirmAccount $EXTENSION_DIR/ConfirmAccount \
 	&& cd $EXTENSION_DIR/ConfirmAccount \
-	&& git checkout -q 2973d2c5aa14069130998ac72f480166101395ca
-
+	&& git checkout -q 2973d2c5aa14069130998ac72f480166101395ca \
+	# CategoryLockdown
+	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
+	&& cd $EXTENSION_DIR/CategoryLockdown \
+	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
