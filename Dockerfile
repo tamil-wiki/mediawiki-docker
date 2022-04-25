@@ -38,7 +38,7 @@ RUN set -x; \
 	# CategoryLockdown
 	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
 	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q 3bb54cab9c772dd20788bb6655eebe206763a0ef
+	&& git checkout -q 6254c86ddef9577b07981ef8d46f9a9f6f297bb8
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
