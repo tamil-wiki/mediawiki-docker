@@ -3,7 +3,7 @@ ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.37.1}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
-VOLUME [ "/var/www/html/images", "/var/www/html/cache" ]
+VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
 # Composer
 RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
