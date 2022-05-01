@@ -32,7 +32,7 @@ function loadenv($envName, $default = "") {
 # $wgDisableOutputCompression = true;
 
 $wgSitename = loadenv('MEDIAWIKI_SITE_NAME', "Tamil Wiki");
-$wgMetaNamespace = loadenv('MEDIAWIKI_META_NAMESPACE', "Literary_Tamil_Wiki");
+$wgMetaNamespace = loadenv('MEDIAWIKI_META_NAMESPACE', "Tamil_Wiki");
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
