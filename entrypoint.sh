@@ -28,6 +28,7 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 
   chown -R $user:$group $WIKI_DIR/cache
   chown -R $user:$group $WIKI_DIR/images
+  chown -R $user:$group $WIKI_DIR/sitemap
   chmod 755 $WIKI_DIR/images
 
   isMediawikiInstalled=false
