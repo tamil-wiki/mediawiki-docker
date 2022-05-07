@@ -12,7 +12,7 @@ RUN chmod +x /usr/local/bin/composer
 RUN pecl install redis && docker-php-ext-enable redis
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards AccessControl Cargo WikiSEO Description2 MetaMaster'}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles BlueSpiceDashboards AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage'}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
