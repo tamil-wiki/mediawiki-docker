@@ -6,8 +6,8 @@ FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
 # Composer
-RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
-RUN chmod +x /usr/local/bin/composer
+RUN curl -L https://github.com/composer/composer/releases/download/2.1.14/composer.phar > /usr/local/bin/composer
+RUN chmod +x /usr/local/bin/composer && apt update && apt-get install -y zip unzip && composer update
 
 RUN pecl install redis && docker-php-ext-enable redis
 
@@ -38,7 +38,11 @@ RUN set -x; \
 	# CategoryLockdown
 	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
 	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea
+	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
+	&& git clone https://github.com/edwardspec/mediawiki-aws-s3.git $EXTENSION_DIR/AWS \
+	&& cd $EXTENSION_DIR/AWS \
+	&& git checkout -q 301c5da5048067964a657ecce6b72e49916d03a7
+
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
