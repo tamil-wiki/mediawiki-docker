@@ -38,7 +38,7 @@ RUN set -x; \
 	# CategoryLockdown
 	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
 	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea
+	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
 	# TabberNeue - 1.7.1
 	&& git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
 	&& cd $EXTENSION_DIR/TabberNeue \
