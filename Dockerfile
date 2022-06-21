@@ -38,7 +38,19 @@ RUN set -x; \
 	# CategoryLockdown
 	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
 	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea
+	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
+	# TabberNeue - 1.7.1
+	&& git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
+	&& cd $EXTENSION_DIR/TabberNeue \
+	&& git checkout -q 6b530290a4da89f406c2119de43c0c8bab0f1a04 \
+	# RottenLinks - 1.0.18
+	&& git clone https://github.com/Miraheze/RottenLinks $EXTENSION_DIR/RottenLinks \
+	&& cd $EXTENSION_DIR/RottenLinks \
+	&& git checkout -q 29bb9c7fdf080e79d976640748fb3ec1d67a9f04 \
+	# Moderation 1.6.21
+	&& git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
+	&& cd $EXTENSION_DIR/Moderation \
+	&& git checkout -q 20f687956775671927535ff6952be2f6fec09043
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
