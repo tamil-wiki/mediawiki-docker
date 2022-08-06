@@ -1,5 +1,5 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
-ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.37.1}
+ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.38.2}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
@@ -11,7 +11,7 @@ RUN chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_37}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw'}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
