@@ -14,7 +14,7 @@ RUN pecl install redis && docker-php-ext-enable redis
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown ExtJSBase BlueSpiceFoundation'}
 # List of extensions need depencies install using composer.
-ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
+ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin BlueSpiceFoundation "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
 ARG GERRIT_REPO="https://gerrit.wikimedia.org/r/mediawiki"
 ARG EXTENSION_DIR="/var/www/html/extensions"
@@ -58,7 +58,7 @@ RUN set -x; \
 	# BlueSpiceFoundation REL1_38
 	&& git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
 	&& cd $EXTENSION_DIR/BlueSpiceFoundation \
-	&& git checkout -q REL1_38
+	&& git checkout -q REL1_38 \
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
