@@ -50,11 +50,11 @@ RUN set -x; \
 	# Moderation 1.6.21
 	&& git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
 	&& cd $EXTENSION_DIR/Moderation \
-	&& git checkout -q 20f687956775671927535ff6952be2f6fec09043
+	&& git checkout -q 20f687956775671927535ff6952be2f6fec09043 \
 	# ExtJSBase REL1_38
 	&& git clone https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
 	&& cd $EXTENSION_DIR/ExtJSBase \
-	&& git checkout -q REL1_38
+	&& git checkout -q REL1_38 \
 	# BlueSpiceFoundation REL1_38
 	&& git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
 	&& cd $EXTENSION_DIR/BlueSpiceFoundation \
