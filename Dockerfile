@@ -58,7 +58,7 @@ RUN set -x; \
 	# BlueSpiceFoundation REL1_38
 	&& git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
 	&& cd $EXTENSION_DIR/BlueSpiceFoundation \
-	&& git checkout -q REL1_38 \
+	&& git checkout -q REL1_38
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
