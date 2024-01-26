@@ -9,6 +9,14 @@ VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" 
 RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
+# Install PHP extension gd for BlueSpiceFoundation
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install gd
+
 RUN pecl install redis && docker-php-ext-enable redis
 
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
@@ -26,39 +34,39 @@ RUN for extension in $MEDIAWIKI_EXTENSIONS; do \
     done
 
 RUN set -x; \
-	cd $EXTENSION_DIR \
-	# GoogleLogin
-	&& git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
-	&& cd $EXTENSION_DIR/GoogleLogin \
-	&& git checkout -q e424b28c32fbe6ef020b1a83e966bdf8ba71ca83 \
-	# ConfirmAccount
-	&& git clone $GERRIT_REPO/extensions/ConfirmAccount $EXTENSION_DIR/ConfirmAccount \
-	&& cd $EXTENSION_DIR/ConfirmAccount \
-	&& git checkout -q 2973d2c5aa14069130998ac72f480166101395ca \
-	# CategoryLockdown
-	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
-	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
-	# TabberNeue - 1.7.1
-	&& git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
-	&& cd $EXTENSION_DIR/TabberNeue \
-	&& git checkout -q 6b530290a4da89f406c2119de43c0c8bab0f1a04 \
-	# RottenLinks - 1.0.18
-	&& git clone https://github.com/Miraheze/RottenLinks $EXTENSION_DIR/RottenLinks \
-	&& cd $EXTENSION_DIR/RottenLinks \
-	&& git checkout -q 29bb9c7fdf080e79d976640748fb3ec1d67a9f04 \
-	# Moderation 1.6.21
-	&& git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
-	&& cd $EXTENSION_DIR/Moderation \
-	&& git checkout -q 20f687956775671927535ff6952be2f6fec09043 \
-	# ExtJSBase REL1_38
-	&& git clone https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
-	&& cd $EXTENSION_DIR/ExtJSBase \
-	&& git checkout -q REL1_38 \
-	# BlueSpiceFoundation REL1_38
-	&& git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
-	&& cd $EXTENSION_DIR/BlueSpiceFoundation \
-	&& git checkout -q REL1_38
+  cd $EXTENSION_DIR \
+  # GoogleLogin
+  && git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
+  && cd $EXTENSION_DIR/GoogleLogin \
+  && git checkout -q e424b28c32fbe6ef020b1a83e966bdf8ba71ca83 \
+  # ConfirmAccount
+  && git clone $GERRIT_REPO/extensions/ConfirmAccount $EXTENSION_DIR/ConfirmAccount \
+  && cd $EXTENSION_DIR/ConfirmAccount \
+  && git checkout -q 2973d2c5aa14069130998ac72f480166101395ca \
+  # CategoryLockdown
+  && git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
+  && cd $EXTENSION_DIR/CategoryLockdown \
+  && git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
+  # TabberNeue - 1.7.1
+  && git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
+  && cd $EXTENSION_DIR/TabberNeue \
+  && git checkout -q 6b530290a4da89f406c2119de43c0c8bab0f1a04 \
+  # RottenLinks - 1.0.18
+  && git clone https://github.com/Miraheze/RottenLinks $EXTENSION_DIR/RottenLinks \
+  && cd $EXTENSION_DIR/RottenLinks \
+  && git checkout -q 29bb9c7fdf080e79d976640748fb3ec1d67a9f04 \
+  # Moderation 1.6.21
+  && git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
+  && cd $EXTENSION_DIR/Moderation \
+  && git checkout -q 20f687956775671927535ff6952be2f6fec09043 \
+  # ExtJSBase REL1_38
+  && git clone https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
+  && cd $EXTENSION_DIR/ExtJSBase \
+  && git checkout -q REL1_38 \
+  # BlueSpiceFoundation REL1_38
+  && git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
+  && cd $EXTENSION_DIR/BlueSpiceFoundation \
+  && git checkout -q REL1_38
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
@@ -67,6 +75,8 @@ RUN for skin in $MEDIAWIKI_SKINS; do \
 
 # Install composer dependencies for extensions
 RUN for extension in $COMPOSER_INSTALL_EXTENSIONS; do \
+  # this is for BlueSpiceFoundation
+  composer --working-dir=$EXTENSION_DIR/$extension config --no-plugins allow-plugins.composer/installers true; \
   composer --working-dir=$EXTENSION_DIR/$extension install --no-dev; \
   done
 
