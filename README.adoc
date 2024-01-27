@@ -79,7 +79,7 @@ Then give PR.
 
 === Upgrading new mediawiiki version
 
-To upgrade mediawiki version, change the `MEDIAWIKI_VERSION` and `MEDIAWIKI_BRANCH` in Dockerfile and github actions file.
+To upgrade mediawiki version, change the `MEDIAWIKI_VERSION` and `MEDIAWIKI_BRANCH` in Dockerfile, development.override.yml and github actions file.
 
 Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L2
 Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/.github/workflows/docker-build-push.yml#L38
