@@ -1,5 +1,6 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
-ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.38.2}
+ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39.6}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
@@ -19,10 +20,9 @@ RUN docker-php-ext-install gd
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown'}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown ExtJSBase BlueSpiceFoundation '}
 # List of extensions need depencies install using composer.
-ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin BlueSpiceFoundation "
+ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin BlueSpiceFoundation '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
 ARG GERRIT_REPO="https://gerrit.wikimedia.org/r/mediawiki"
 ARG EXTENSION_DIR="/var/www/html/extensions"
@@ -58,15 +58,7 @@ RUN set -x; \
   # Moderation 1.6.21
   && git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
   && cd $EXTENSION_DIR/Moderation \
-  && git checkout -q 20f687956775671927535ff6952be2f6fec09043 \
-  # ExtJSBase REL1_38
-  && git clone https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
-  && cd $EXTENSION_DIR/ExtJSBase \
-  && git checkout -q REL1_38 \
-  # BlueSpiceFoundation REL1_38
-  && git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
-  && cd $EXTENSION_DIR/BlueSpiceFoundation \
-  && git checkout -q REL1_38
+  && git checkout -q 20f687956775671927535ff6952be2f6fec09043
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
