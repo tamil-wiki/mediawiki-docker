@@ -61,7 +61,28 @@ Login with your old admin username and password
 
 === Adding new extension/plugin
 
+To add new extension/plugin, add the new extension name in the `Dockerfile` environmental variable `MEDIAWIKI_EXTENSIONS`.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L23
+
+If the extension is depends on composer install, add that in the `Dockerfile` environmental variable `COMPOSER_INSTALL_EXTENSIONS`.
+
+Then give PR.
+
+=== Adding new skin
+
+To add new skin, add the new skin name in the `Dockerfile` environmental variable `MEDIAWIKI_SKINS`.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L26
+
+Then give PR.
+
 === Upgrading new mediawiiki version
+
+To upgrade mediawiki version, change the `MEDIAWIKI_VERSION` and `MEDIAWIKI_BRANCH` in Dockerfile and github actions file.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L2
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/.github/workflows/docker-build-push.yml#L38
 
 === Build a new image
 

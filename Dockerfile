@@ -1,5 +1,6 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
 ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39.6}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
@@ -19,10 +20,9 @@ RUN docker-php-ext-install gd
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown ExtJSBase BlueSpiceFoundation'}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown ExtJSBase BlueSpiceFoundation '}
 # List of extensions need depencies install using composer.
-ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin BlueSpiceFoundation "
+ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin BlueSpiceFoundation '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
 ARG GERRIT_REPO="https://gerrit.wikimedia.org/r/mediawiki"
 ARG EXTENSION_DIR="/var/www/html/extensions"
