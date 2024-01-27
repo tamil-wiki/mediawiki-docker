@@ -59,6 +59,10 @@ Login with your old admin username and password
 
 == Development
 
+=== Adding new extension/plugin
+
+=== Upgrading new mediawiiki version
+
 === Build a new image
 
 Change the `Dockerfile` for your need and build docker image
@@ -68,3 +72,18 @@ docker-compose -f docker-compose.yml -f development.override.yml build mediawiki
 ```
 
 === Test new image in local
+
+* Make your changes in `Dockerfile` or `docker-compose.yml`
+* Build docker image
+* Then bringup the docker-compose
+
+=== Test new image in staging/testing environment
+
+* Make your changes in `Dockerfile` or `docker-compose.yml`
+* Create PR
+* Wait for CI to build and push the image to docker hub
+  * The docker image will be pushed to https://hub.docker.com/r/tamilwiki/mediawiki/tags
+  * Usually it will take 5-10 minutes, the tag will be `pr-<PR_NUMBER>`
+* SSH into staging server
+* Change the the version of `MEDIAWIKI_VERSION` in `.env` file to `pr-<PR_NUMBER>`
+* Then restart the mediawiki container
