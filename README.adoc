@@ -63,7 +63,7 @@ Login with your old admin username and password
 
 To add new extension/plugin, add the new extension name in the `Dockerfile` environmental variable `MEDIAWIKI_EXTENSIONS`.
 
-Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L23
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L25
 
 If the extension is depends on composer install, add that in the `Dockerfile` environmental variable `COMPOSER_INSTALL_EXTENSIONS`.
 
@@ -73,7 +73,7 @@ Then give PR.
 
 To add new skin, add the new skin name in the `Dockerfile` environmental variable `MEDIAWIKI_SKINS`.
 
-Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L26
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L28
 
 Then give PR.
 

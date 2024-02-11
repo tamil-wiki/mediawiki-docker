@@ -1,8 +1,10 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
 ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39.6}
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
+
+# Have to specify here to work inside this FROM
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 
 VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
@@ -30,7 +32,7 @@ ARG SKIN_DIR="/var/www/html/extensions"
 
 # Extensions
 RUN for extension in $MEDIAWIKI_EXTENSIONS; do \
-    git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/extensions/$extension $EXTENSION_DIR/$extension; \
+    git clone --depth 1 --branch $MEDIAWIKI_BRANCH $GERRIT_REPO/extensions/$extension $EXTENSION_DIR/$extension; \
     done
 
 RUN set -x; \
