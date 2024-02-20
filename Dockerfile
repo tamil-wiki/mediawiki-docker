@@ -1,10 +1,10 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
-ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39.6}
+ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.38.2}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
 # Have to specify here to work inside this FROM
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
 
 VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
@@ -15,14 +15,16 @@ RUN chmod +x /usr/local/bin/composer
 # Install PHP extension gd for BlueSpiceFoundation
 RUN apt-get update && apt-get install -y \
     libpng-dev \
+    libzip-dev \
     zlib1g-dev \
+    unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-RUN docker-php-ext-install gd
+RUN docker-php-ext-install gd zip
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown ExtJSBase BlueSpiceFoundation '}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown '}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin BlueSpiceFoundation '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
@@ -60,11 +62,19 @@ RUN set -x; \
   # Moderation 1.6.21
   && git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
   && cd $EXTENSION_DIR/Moderation \
-  && git checkout -q 20f687956775671927535ff6952be2f6fec09043
+  && git checkout -q 20f687956775671927535ff6952be2f6fec09043 \
+  # ExtJSBase - For BlueSpiceFoundation
+  && git clone --depth 1 --branch $MEDIAWIKI_BRANCH https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
+  # OOJSPlus - For BlueSpiceFoundation
+  && git clone --depth 1 --branch $MEDIAWIKI_BRANCH https://github.com/wikimedia/mediawiki-extensions-OOJSPlus $EXTENSION_DIR/OOJSPlus \
+  # BlueSpiceFoundation
+  && git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
+  && cd $EXTENSION_DIR/BlueSpiceFoundation \
+  && git checkout -q e8df20e44c60622cc70c81c00696ef754df2df58
 
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
-    git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
+    git clone --depth 1 --branch $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
     done
 
 # Install composer dependencies for extensions

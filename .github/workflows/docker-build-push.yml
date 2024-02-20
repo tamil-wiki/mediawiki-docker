@@ -35,7 +35,7 @@ jobs:
           context: .
           push: true
           build-args: |
-            MEDIAWIKI_VERSION: 1.39.6
-            MEDIAWIKI_BRANCH: REL1_39
+            MEDIAWIKI_VERSION: 1.38.2
+            MEDIAWIKI_BRANCH: REL1_38
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

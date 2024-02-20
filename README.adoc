@@ -89,7 +89,7 @@ Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/.github/workflows
 Change the `Dockerfile` for your need and build docker image
 
 ```
-docker-compose -f docker-compose.yml -f development.override.yml build mediawiki
+docker-compose --progress plain -f docker-compose.yml -f development.override.yml build mediawiki --no-cache
 ```
 
 === Test new image in local
