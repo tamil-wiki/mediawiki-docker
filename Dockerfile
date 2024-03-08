@@ -67,6 +67,8 @@ RUN set -x; \
   && git clone --depth 1 --branch $MEDIAWIKI_BRANCH https://github.com/wikimedia/mediawiki-extensions-ExtJSBase $EXTENSION_DIR/ExtJSBase \
   # OOJSPlus - For BlueSpiceFoundation
   && git clone --depth 1 --branch $MEDIAWIKI_BRANCH https://github.com/wikimedia/mediawiki-extensions-OOJSPlus $EXTENSION_DIR/OOJSPlus \
+  # FilterableTables
+  && git clone --depth 1 --branch $MEDIAWIKI_BRANCH https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFilterableTables $EXTENSION_DIR/BlueSpiceFilterableTables \
   # BlueSpiceFoundation
   && git clone https://github.com/wikimedia/mediawiki-extensions-BlueSpiceFoundation $EXTENSION_DIR/BlueSpiceFoundation \
   && cd $EXTENSION_DIR/BlueSpiceFoundation \
