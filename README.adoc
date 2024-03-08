@@ -59,12 +59,52 @@ Login with your old admin username and password
 
 == Development
 
+=== Adding new extension/plugin
+
+To add new extension/plugin, add the new extension name in the `Dockerfile` environmental variable `MEDIAWIKI_EXTENSIONS`.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L25
+
+If the extension is depends on composer install, add that in the `Dockerfile` environmental variable `COMPOSER_INSTALL_EXTENSIONS`.
+
+Then give PR.
+
+=== Adding new skin
+
+To add new skin, add the new skin name in the `Dockerfile` environmental variable `MEDIAWIKI_SKINS`.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L28
+
+Then give PR.
+
+=== Upgrading new mediawiiki version
+
+To upgrade mediawiki version, change the `MEDIAWIKI_VERSION` and `MEDIAWIKI_BRANCH` in Dockerfile, development.override.yml and github actions file.
+
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/Dockerfile#L2
+Refer https://github.com/tamil-wiki/mediawiki-docker/blob/main/.github/workflows/docker-build-push.yml#L38
+
 === Build a new image
 
 Change the `Dockerfile` for your need and build docker image
 
 ```
-docker-compose -f docker-compose.yml -f development.override.yml build mediawiki
+docker-compose --progress plain -f docker-compose.yml -f development.override.yml build mediawiki --no-cache
 ```
 
 === Test new image in local
+
+* Make your changes in `Dockerfile` or `docker-compose.yml`
+* Build docker image
+* Then bringup the docker-compose
+
+=== Test new image in staging/testing environment
+
+* Make your changes in `Dockerfile` or `docker-compose.yml`
+* Create PR
+* Wait for CI to build and push the image to docker hub
+  * The docker image will be pushed to https://hub.docker.com/r/tamilwiki/mediawiki/tags
+  * Usually it will take 5-10 minutes, the tag will be `pr-<PR_NUMBER>`
+* SSH into staging server
+* Change the the version of `MEDIAWIKI_VERSION` in `.env` file to `pr-<PR_NUMBER>`
+* Then restart the mediawiki container
