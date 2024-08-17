@@ -1,5 +1,9 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
 ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39}
+
+# Have to specify here to work inside this FROM
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
+
 #mw
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
@@ -12,10 +16,9 @@ RUN chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend DynamicPageList3 TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount'}
 # List of extensions need depencies install using composer.
-ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
+ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
 ARG GERRIT_REPO="https://gerrit.wikimedia.org/r/mediawiki"
 ARG EXTENSION_DIR="/var/www/html/extensions"
@@ -23,7 +26,7 @@ ARG SKIN_DIR="/var/www/html/extensions"
 
 # Extensions
 RUN for extension in $MEDIAWIKI_EXTENSIONS; do \
-    git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/extensions/$extension $EXTENSION_DIR/$extension; \
+    git clone --depth 1 --branch $MEDIAWIKI_BRANCH $GERRIT_REPO/extensions/$extension $EXTENSION_DIR/$extension; \
     done
 
 RUN set -x; \
@@ -46,7 +49,7 @@ RUN set -x; \
 	&& git checkout -q 20f687956775671927535ff6952be2f6fec09043
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
-    git clone --depth 1 -b $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
+    git clone --depth 1 --branch $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
     done
 
 # Install composer dependencies for extensions
