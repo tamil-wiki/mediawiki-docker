@@ -60,9 +60,6 @@ RUN chown -R www-data:www-data $SKIN_DIR
 COPY entrypoint.sh /entrypoint.sh
 COPY check.php /check.php
 COPY LocalSettings.php /var/www/html/LocalSettings.php
-RUN touch /var/www/html/vijay.txt
-RUN cat /var/www/html/LocalSettings.php
-RUN ls /var/www/html
 COPY CustomSettings.php /var/www/html/CustomSettings.php
 RUN chmod +x /entrypoint.sh
 
