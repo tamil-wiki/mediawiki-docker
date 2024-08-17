@@ -1,5 +1,6 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
 ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39}
+#mw
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
