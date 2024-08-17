@@ -1,5 +1,5 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
-ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.38.2}
+ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39}
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
@@ -11,8 +11,8 @@ RUN chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_38}
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend DynamicPageList3 TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown'}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend DynamicPageList3 TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount'}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS="GoogleLogin "
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
@@ -31,14 +31,6 @@ RUN set -x; \
 	&& git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
 	&& cd $EXTENSION_DIR/GoogleLogin \
 	&& git checkout -q e424b28c32fbe6ef020b1a83e966bdf8ba71ca83 \
-	# ConfirmAccount
-	&& git clone $GERRIT_REPO/extensions/ConfirmAccount $EXTENSION_DIR/ConfirmAccount \
-	&& cd $EXTENSION_DIR/ConfirmAccount \
-	&& git checkout -q 2973d2c5aa14069130998ac72f480166101395ca \
-	# CategoryLockdown
-	&& git clone $GERRIT_REPO/extensions/CategoryLockdown $EXTENSION_DIR/CategoryLockdown \
-	&& cd $EXTENSION_DIR/CategoryLockdown \
-	&& git checkout -q d6d2c7917d3000d0bee7d328ad9df86fcd156eea \
 	# TabberNeue - 1.7.1
 	&& git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
 	&& cd $EXTENSION_DIR/TabberNeue \
