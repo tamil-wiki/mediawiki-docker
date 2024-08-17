@@ -1,9 +1,6 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
 ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39}
 
-# Have to specify here to work inside this FROM
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
-
 #mw
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
 FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
@@ -16,7 +13,10 @@ RUN chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend DynamicPageList3 TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge TabberNeue RevisionSlider RottenLinks Moderation LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount '}
+# Have to specify here to work inside this FROM
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
+
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount '}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
@@ -34,19 +34,23 @@ RUN set -x; \
   # GoogleLogin
   && git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
   && cd $EXTENSION_DIR/GoogleLogin \
-  && git checkout -q e424b28c32fbe6ef020b1a83e966bdf8ba71ca83 \
-  # TabberNeue - 1.7.1
+  && git checkout ${MEDIAWIKI_BRANCH} \
+  # TabberNeue - 2.4.0 - REL1_39 is not available. So used the 2.4.0 commit.
   && git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
   && cd $EXTENSION_DIR/TabberNeue \
-  && git checkout -q 6b530290a4da89f406c2119de43c0c8bab0f1a04 \
-  # RottenLinks - 1.0.18
+  && git checkout -q 57d34257927ee4edd56605173c4aebba6fc69e42 \
+  # RottenLinks
   && git clone https://github.com/Miraheze/RottenLinks $EXTENSION_DIR/RottenLinks \
   && cd $EXTENSION_DIR/RottenLinks \
-  && git checkout -q 29bb9c7fdf080e79d976640748fb3ec1d67a9f04 \
-  # Moderation 1.6.21
+  && git checkout ${MEDIAWIKI_BRANCH} \
+  # Moderation 1.8.9 - REL1_39 is not available. So used the latest master commit.
   && git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
   && cd $EXTENSION_DIR/Moderation \
-  && git checkout -q 20f687956775671927535ff6952be2f6fec09043
+  && git checkout -q f14ac41e4d78a4a9c6d0978fc18a769d3b45e41e \
+  # DynamicPageList3
+  && git clone https://github.com/Universal-Omega/DynamicPageList3 $EXTENSION_DIR/DynamicPageList3 \
+  && cd $EXTENSION_DIR/DynamicPageList3 \
+  && git checkout ${MEDIAWIKI_BRANCH}
 # Skins
 RUN for skin in $MEDIAWIKI_SKINS; do \
     git clone --depth 1 --branch $MEDIAWIKI_BRANCH $GERRIT_REPO/skins/$skin $SKIN_DIR/$skin; \
