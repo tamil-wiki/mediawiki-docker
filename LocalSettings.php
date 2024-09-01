@@ -91,16 +91,6 @@ $wgDBTableOptions = loadenv('MEDIAWIKI_DB_TABLE_OPTIONS', "ENGINE=InnoDB, DEFAUL
 # This has no effect unless $wgSharedDB is also set.
 $wgSharedTables[] = "actor";
 
-## Shared memory settings
-#TODO: Defining string value in default is not working. So custom value from env will not work.
-$mainCache = loadenv('MEDIAWIKI_MAIN_CACHE', CACHE_NONE);
-$wgMainCacheType = constant($mainCache) ? constant($mainCache) : $mainCache;
-switch ($wgMainCacheType) {
-  case CACHE_MEMCACHED:
-    $wgMemCachedServers = json_decode(loadenv('MEDIAWIKI_MEMCACHED_SERVERS', '[]'));
-    break;
-}
-
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
 $wgEnableUploads = true;
