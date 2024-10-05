@@ -16,7 +16,7 @@ RUN pecl install redis && docker-php-ext-enable redis
 # Have to specify here to work inside this FROM
 ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
 
-ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount '}
+ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount Elastica CirrusSearch '}
 # List of extensions need depencies install using composer.
 ARG COMPOSER_INSTALL_EXTENSIONS=${COMPOSER_INSTALL_EXTENSIONS:-'GoogleLogin Elastica CirrusSearch '}
 ARG MEDIAWIKI_SKINS=${MEDIAWIKI_SKINS:-'MinervaNeue '}
