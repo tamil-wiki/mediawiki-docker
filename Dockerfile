@@ -68,6 +68,8 @@ COPY entrypoint.sh /entrypoint.sh
 COPY check.php /check.php
 COPY LocalSettings.php /var/www/html/LocalSettings.php
 COPY CustomSettings.php /var/www/html/CustomSettings.php
+COPY includes/search/SearchMySQL.php /var/www/html/includes/search/SearchMySQL.php
+
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
