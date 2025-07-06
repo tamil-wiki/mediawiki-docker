@@ -311,7 +311,9 @@ class SearchMySQL extends SearchDatabase {
 		$query['fields'][] = 'page_title';
 		$query['conds'][] = 'page_id=si_page';
 		$query['conds'][] = $match[0];
-		$query['options']['ORDER BY'] = $match[1];
+		#$query['options']['ORDER BY'] = $match[1];
+		$query['options']['ORDER BY'] = 'CHAR_LENGTH(page_title) ASC';
+		
 	}
 
 	/**
