@@ -5,7 +5,7 @@
 == Prerequestics
 
 * Docker 19.03.13 or latest
-* Docker compose 1.29.2 or latest
+* Docker compose v5.6.1 or latest
 
 Install docker
 
@@ -18,7 +18,7 @@ sudo usermod -aG docker ${USER}
 Install docker-compose
 
 ```
-sudo curl -ksSL https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo curl -ksSL https://github.com/docker/compose/releases/download/v5.6.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 curl -ksSL https://raw.githubusercontent.com/docker/compose/$(docker-compose --version | awk 'NR==1{print $NF}')/contrib/completion/bash/docker-compose | sudo tee /etc/bash_completion.d/docker-compose
 ```
