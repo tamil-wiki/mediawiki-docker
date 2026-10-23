@@ -7,9 +7,17 @@ FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
 VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
-# Composer
-RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
-RUN chmod +x /usr/local/bin/composer
+# unzip is required by composer to extract dist archives; the mediawiki base image doesn't ship it
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends unzip \
+  && rm -rf /var/lib/apt/lists/*
+
+# Composer - pinned version with checksum. To upgrade, update both values from https://getcomposer.org/download/
+ARG COMPOSER_VERSION=2.10.3
+ARG COMPOSER_SHA256=7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+RUN curl -fsSL https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer \
+  && echo "${COMPOSER_SHA256}  /usr/local/bin/composer" | sha256sum -c - \
+  && chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
