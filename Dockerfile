@@ -1,5 +1,5 @@
 # Mention the required mediawiki version in build_args to upgrade / change the mediawiki
-ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.39}
+ARG MEDIAWIKI_VERSION=${MEDIAWIKI_VERSION:-1.43}
 
 #mw
 # TODO: This has to be template based. The variant apache/fpm has to be passed as variable to template.
@@ -7,14 +7,22 @@ FROM mediawiki:${MEDIAWIKI_VERSION}-fpm
 
 VOLUME [ "/var/www/html/images", "/var/www/html/cache", "/var/www/html/sitemap" ]
 
-# Composer
-RUN curl -L https://getcomposer.org/composer-2.phar > /usr/local/bin/composer
-RUN chmod +x /usr/local/bin/composer
+# unzip is required by composer to extract dist archives; the mediawiki base image doesn't ship it
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends unzip \
+  && rm -rf /var/lib/apt/lists/*
+
+# Composer - pinned version with checksum. To upgrade, update both values from https://getcomposer.org/download/
+ARG COMPOSER_VERSION=2.10.3
+ARG COMPOSER_SHA256=7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6
+RUN curl -fsSL https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer \
+  && echo "${COMPOSER_SHA256}  /usr/local/bin/composer" | sha256sum -c - \
+  && chmod +x /usr/local/bin/composer
 
 RUN pecl install redis && docker-php-ext-enable redis
 
 # Have to specify here to work inside this FROM
-ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_39}
+ARG MEDIAWIKI_BRANCH=${MEDIAWIKI_BRANCH:-REL1_43}
 
 ARG MEDIAWIKI_EXTENSIONS=${MEDIAWIKI_EXTENSIONS:-'MobileFrontend TemplateStyles AccessControl Cargo WikiSEO Description2 MetaMaster ContactPage UserMerge RevisionSlider LastUserLogin ExternalLinkConfirm intersection ContributionScores CreatePageUw Lockdown CategoryLockdown ConfirmAccount '}
 # List of extensions need depencies install using composer.
@@ -35,7 +43,7 @@ RUN set -x; \
   && git clone $GERRIT_REPO/extensions/GoogleLogin $EXTENSION_DIR/GoogleLogin \
   && cd $EXTENSION_DIR/GoogleLogin \
   && git checkout ${MEDIAWIKI_BRANCH} \
-  # TabberNeue - 2.4.0 - REL1_39 is not available. So used the 2.4.0 commit.
+  # TabberNeue - 2.4.0 - REL1_43 is not available. So used the 2.4.0 commit.
   && git clone https://github.com/StarCitizenTools/mediawiki-extensions-TabberNeue $EXTENSION_DIR/TabberNeue \
   && cd $EXTENSION_DIR/TabberNeue \
   && git checkout -q 57d34257927ee4edd56605173c4aebba6fc69e42 \
@@ -43,7 +51,7 @@ RUN set -x; \
   && git clone https://github.com/Miraheze/RottenLinks $EXTENSION_DIR/RottenLinks \
   && cd $EXTENSION_DIR/RottenLinks \
   && git checkout ${MEDIAWIKI_BRANCH} \
-  # Moderation 1.8.9 - REL1_39 is not available. So used the latest master commit.
+  # Moderation 1.8.9 - REL1_43 is not available. So used the latest master commit.
   && git clone https://github.com/edwardspec/mediawiki-moderation $EXTENSION_DIR/Moderation \
   && cd $EXTENSION_DIR/Moderation \
   && git checkout -q f14ac41e4d78a4a9c6d0978fc18a769d3b45e41e \

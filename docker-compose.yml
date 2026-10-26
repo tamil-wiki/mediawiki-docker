@@ -1,5 +1,3 @@
-version: '3.9'
-
 x-default: &default
   dns:
     - 1.1.1.1
@@ -14,7 +12,7 @@ services:
 
   mediawiki:
     <<: *default
-    image: tamilwiki/mediawiki:1.39-fpm
+    image: tamilwiki/mediawiki:1.43-fpm
     ports:
       # The VisualEditor to work the host port and container port has to be same
       - 80:80
