@@ -65,6 +65,9 @@ RUN for skin in $MEDIAWIKI_SKINS; do \
     done
 
 # Install composer dependencies for extensions
+# GoogleLogin otherwise resolves psr/http-message 2.0, which shadows core's 1.1 and makes
+# every MediaWiki HTTP request fatal (MWCallbackStream::write signature mismatch). Pin to core's major.
+RUN composer --working-dir=$EXTENSION_DIR/GoogleLogin require --no-update psr/http-message:^1.1
 RUN for extension in $COMPOSER_INSTALL_EXTENSIONS; do \
   composer --working-dir=$EXTENSION_DIR/$extension install --no-dev; \
   done
